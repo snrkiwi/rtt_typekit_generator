@@ -1,0 +1,33 @@
+# Generated from rtt_typekit_generator/cmake/rtt_typekit_generatorConfig.cmake.in
+# Config file for the rtt_typekit_generator package
+#
+# It defines the following variables:
+#  rtt_typekit_generator_DIR           - directory that contains rtt_typekit_generator's cmake files
+#  rtt_typekit_generator_TEMPLATES_DIR - directory that contains typekit source templates
+#  rtt_typekit_generator_SOURCE_DIR    - directory that contains source files required during typekit generation
+#  rtt_typekit_generator_INCLUDE_DIRS  - include directories for rtt_typekit_generator
+#  rtt_typekit_generator_LIBRARIES     - libraries to link against
+#
+
+# Find Boost
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+
+# Compute paths
+set(rtt_typekit_generator_DIR "@rtt_typekit_generator_DIR@")
+set(rtt_typekit_generator_TEMPLATES_DIR "@rtt_typekit_generator_TEMPLATES_DIR@")
+set(rtt_typekit_generator_SOURCE_DIR "@rtt_typekit_generator_SOURCE_DIR@")
+set(rtt_typekit_generator_INCLUDE_DIRS "@rtt_typekit_generator_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+#if(NOT TARGET rtt_typekit_generator AND NOT rtt_typekit_generator_BINARY_DIR)
+#  include("${rtt_typekit_generator_CMAKE_DIR}/rtt_typekit_generatorTargets.cmake")
+#endif()
+
+# These are IMPORTED targets created by rtt_typekit_generatorTargets.cmake
+#set(rtt_typekit_generator_LIBRARIES rtt_typekit_generator)
+
+# Include macro scripts
+include(${rtt_typekit_generator_DIR}/orocos_typekit_headers.cmake)
+
+# Add this folder to the CMAKE_MODULE_PATH
+list(APPEND CMAKE_MODULE_PATH ${rtt_typekit_generator_DIR})

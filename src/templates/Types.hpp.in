@@ -1,0 +1,14 @@
+/* Generated from rtt_typekit_generator/src/templates/Types.hpp.in */
+#ifndef @_typekit_CNAME@_TYPES_HPP
+#define @_typekit_CNAME@_TYPES_HPP
+
+@_typekit_INCLUDES@
+
+#include <rtt/Attribute.hpp>
+#include <rtt/Port.hpp>
+#include <rtt/Property.hpp>
+#include <rtt/internal/DataSources.hpp>
+
+@_typekit_EXTERN_TEMPLATE_DECLARATIONS@
+
+#endif // @_typekit_CNAME@_TYPES_HPP

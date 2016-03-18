@@ -1,0 +1,18 @@
+<package format="2">
+  <name>rtt_typekit_generator</name>
+  <version>0.0.0</version>
+  <description>This package can generate Orocos RTT typekits from C/C++ header files.</description>
+  <maintainer email="orocos-dev@lists.mech.kuleuven.be">Orocos Developers</maintainer>
+
+  <license>Closed</license>
+
+  <author>Johannes Meyer</author>
+
+  <depend>rtt</depend>
+  <depend>boost</depend>
+
+  <test_depend>gtest</test_depend>
+  <test_depend>eigen</test_depend>
+  <test_depend>kdl_typekit</test_depend>
+
+</package>

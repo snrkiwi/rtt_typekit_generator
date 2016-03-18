@@ -1,0 +1,58 @@
+/* Generated from rtt_typekit_generator/src/templates/typekit.cpp.in */
+/******************************************************************************
+ *  Copyright (c) 2016, Intermodalics BVBA                                    *
+ *  All rights reserved.                                                      *
+ ******************************************************************************/
+
+#include <@_typekit_NAME@/typekit/includes.h>
+#include <@_typekit_NAME@/typekit/types.h>
+
+#include <rtt/types/StructTypeInfo.hpp>
+#include <rtt/types/TypekitPlugin.hpp>
+#include <rtt/types/TypeInfoRepository.hpp>
+
+#include <boost/preprocessor.hpp>
+#include <boost/type_traits/has_left_shift.hpp>
+#include <boost/type_traits/has_right_shift.hpp>
+
+#include <iostream>
+
+#define EXPLICIT_TEMPLATE_INSTANTIATION(z, i, _2) \
+    template class RTT_EXPORT RTT::internal::DataSource< TYPE(i) >; \
+    template class RTT_EXPORT RTT::internal::AssignableDataSource< TYPE(i) >; \
+    template class RTT_EXPORT RTT::internal::ValueDataSource< TYPE(i) >; \
+    template class RTT_EXPORT RTT::internal::ConstantDataSource< TYPE(i) >; \
+    template class RTT_EXPORT RTT::internal::ReferenceDataSource< TYPE(i) >; \
+    template class RTT_EXPORT RTT::OutputPort< TYPE(i) >; \
+    template class RTT_EXPORT RTT::InputPort< TYPE(i) >; \
+    template class RTT_EXPORT RTT::Property< TYPE(i) >; \
+    template class RTT_EXPORT RTT::Attribute< TYPE(i) >;
+
+BOOST_PP_REPEAT(TYPE_CNT, EXPLICIT_TEMPLATE_INSTANTIATION, BOOST_PP_EMPTY)
+
+class @_typekit_CNAME@TypekitPlugin
+    : public RTT::types::TypekitPlugin
+{
+public:
+    virtual std::string getName() {
+        return "@_typekit_NAME@";
+    }
+
+    virtual bool loadTypes() {
+        #define LOAD_TYPE(z, i, _2) \
+            RTT::types::TypeInfoRepository::Instance()->addType( \
+                new RTT::types::StructTypeInfo<TYPE(i), \
+                    boost::has_left_shift<std::ostream, TYPE(i)>::value && \
+                    boost::has_right_shift<std::istream, TYPE(i)>::value>(TYPE_NAME(i)));
+        BOOST_PP_REPEAT(TYPE_CNT, LOAD_TYPE, BOOST_PP_EMPTY);
+        return true;
+    }
+
+    virtual bool loadOperators() { return true; }
+
+    virtual bool loadConstructors() { return true; }
+
+    virtual bool loadGlobals() { return true; }
+};
+
+ORO_TYPEKIT_PLUGIN(@_typekit_CNAME@TypekitPlugin)

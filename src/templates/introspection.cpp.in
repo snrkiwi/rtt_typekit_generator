@@ -1,0 +1,24 @@
+/* Generated from rtt_typekit_generator/src/templates/introspection.cpp.in */
+/******************************************************************************
+ *  Copyright (c) 2016, Intermodalics BVBA                                    *
+ *  All rights reserved.                                                      *
+ ******************************************************************************/
+
+#include <@_typekit_NAME@/typekit/includes.h>
+#include <@_typekit_NAME@/typekit/types.h>
+
+#include <rtt_typekit_generator/details/introspection.h>
+
+#include <boost/preprocessor.hpp>
+
+using namespace rtt_typekit_generator;
+
+namespace rtt_typekit_generator {
+
+#define DECLARE_TYPE_INTROSPECTION(z, i, _2) \
+    template class details::TypeIntrospection<TYPE(i)>; \
+    details::TypeIntrospection<TYPE(i)> type##i(TYPE_NAME(i));
+
+BOOST_PP_REPEAT(TYPE_CNT, DECLARE_TYPE_INTROSPECTION, BOOST_PP_EMPTY)
+
+}  // namespace rtt_typekit_generator

@@ -1,0 +1,35 @@
+# Generated from rtt_typekit_generator/src/templates/CMakeLists.txt.in
+
+cmake_minimum_required(VERSION 2.8.3)
+project(@_typekit_PROJECT_NAME@)
+
+## Find Orocos RTT
+find_package(OROCOS-RTT QUIET)
+if(NOT OROCOS-RTT_FOUND)
+  message (FATAL_ERROR "\nCould not find Orocos. Please use the shell command\n 'source orocos_toolchain/env.sh' and then run cmake again.")
+endif()
+
+# Defines the orocos_* cmake macros. See that file for additional
+# documentation.
+include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
+
+# Build the typekit
+orocos_typekit(@_typekit_TARGET@-typekit typekit.cpp)
+add_dependencies(@_typekit_TARGET@-typekit ${@_typekit_TARGET@_EXPORTED_TARGETS})
+
+# Install header files
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+# CORBA transport (optional)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/corba/CMakeLists.txt)
+  add_subdirectory(corba)
+endif()
+
+# Generate the @_typekit_PROJECT_NAME@ Orocos package
+orocos_generate_package(
+  INCLUDE_DIRS @_typekit_INCLUDE_DIRS@
+  VERSION @_typekit_VERSION@
+)

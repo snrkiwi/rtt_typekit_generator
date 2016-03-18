@@ -1,0 +1,55 @@
+# Generated from rtt_typekit_generator/src/templates/corba/CMakeLists.txt.in
+
+# Check if RTT has been compiled with CORBA support
+if(NOT OROCOS-RTT_CORBA_FOUND)
+  message(SEND_ERROR "Cannot build a corba transport for typekit @_typekit_NAME@ because the RTT corba library was not found.")
+  return()
+endif()
+
+# Find IDL compiler
+if(CORBA_IMPLEMENTATION STREQUAL "TAO")
+    find_program(OROCOS-RTT_IDL_EXECUTABLE tao_idl)
+    if(OROCOS-RTT_IDL_EXECUTABLE)
+        add_definitions(-D_REENTRANT)
+        SET(OROCOS-RTT_IDL ${OROCOS-RTT_IDL_EXECUTABLE} -bcxx -Wba -Wbh=C.h -Wbs=C.cpp -Wbd=DynSK.cpp)
+    else()
+        message(FATAL_ERROR "Cannot find IDL compiler tao_idl")
+    endif()
+
+elseif(CORBA_IMPLEMENTATION STREQUAL "OMNIORB")
+    find_program(OROCOS-RTT_IDL_EXECUTABLE omniidl)
+    IF (OROCOS-RTT_IDL_EXECUTABLE)
+        SET(OrocosCORBA_Typekit_INCLUDE_DIR "${OROCOS_RTT_INCLUDE_DIRS}/rtt;${OROCOS_RTT_INCLUDE_DIRS}/rtt/corba")
+        SET(OROCOS-RTT_IDL ${OROCOS-RTT_IDL_EXECUTABLE} -bcxx -Wba -Wbh=C.h -Wbs=C.cpp -Wbd=DynSK.cpp)
+    else()
+        message(FATAL_ERROR "Cannot find IDL compiler omniidl")
+    endif()
+else()
+    message(FATAL_ERROR "unknown Corba implementation ${CORBA_IMPLEMENTATION}")
+endif()
+
+# Compile IDL
+set(CORBA_FILES ${CMAKE_CURRENT_BINARY_DIR}/@_typekit_NAME@TypesC.cpp)
+if(CORBA_IMPLEMENTATION STREQUAL "OMNIORB")
+    list(APPEND CORBA_FILES ${CMAKE_CURRENT_BINARY_DIR}/@_typekit_NAME@TypesDynSK.cpp)
+endif(CORBA_IMPLEMENTATION STREQUAL "OMNIORB")
+
+add_custom_command(OUTPUT ${CORBA_FILES}
+    COMMAND ${OROCOS-RTT_IDL} -Wbkeep_inc_path
+        ${CMAKE_CURRENT_SOURCE_DIR}/@_typekit_NAME@Types.idl
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/@_typekit_NAME@Types.idl)
+
+# Generate the CORBA transport
+orocos_typekit(@_typekit_TARGET@-transport-corba
+    transport.cpp
+    ${CORBA_FILES})
+target_link_libraries(@_typekit_TARGET@-transport-corba
+    @_typekit_TARGET@-typekit ${OROCOS-RTT_CORBA_LIBRARIES})
+
+# Generate the @_typekit_PROJECT_NAME@-transport-corba Orocos package
+orocos_generate_package(
+  @_typekit_PROJECT_NAME@-transport-corba
+  DEPENDS_TARGETS @_typekit_PROJECT_NAME@
+  INCLUDE_DIRS @_typekit_INCLUDE_DIRS@
+  VERSION @_typekit_VERSION@
+)
