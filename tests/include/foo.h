@@ -36,10 +36,26 @@ struct Foo {
 };
 
 typedef Eigen::Vector3d EigenVector;
+typedef Eigen::Vector6d     Eigen6d;
+typedef Eigen::Matrix37d    Eigen37d;
 
 struct NestedKDL {
     KDL::Vector v;
     std::vector<KDL::Frame> frames;
+};
+
+struct Complex {
+    // RTT::rt_string   string;
+    bool                    b;
+    std::vector<double>     array;
+    KDL::Vector             v;
+    KDL::Frame              f;
+    KDL::Wrench             w;
+    EigenVector             ev;
+    Eigen6d                 e6;
+    Eigen37d                e37;
+    NestedKDL               n;
+    std::vector<NestedKDL>  nArray;
 };
 
 static inline std::ostream &operator<<(std::ostream &os, const Simple &t) {
